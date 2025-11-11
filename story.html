@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>No Pablo — Über uns</title>
+  <meta name="description" content="Die Geschichte und Philosophie von No Pablo.">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Cinzel:wght@400;700&display=swap');
+    :root{--bg1:#0f1720;--bg2:#0f1b25;--card:#0f1724;--muted:#bfc9cf;--accent:#ff5a5a;--soft:#e7eef2;--maxw:1100px}
+    *{box-sizing:border-box}html,body{height:100%}body{margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,var(--bg1),var(--bg2));color:var(--soft);display:flex;flex-direction:column;min-height:100vh}
+    .site-header{position:sticky;top:0;background:linear-gradient(180deg, rgba(6,8,10,0.45), rgba(6,8,10,0.12));backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,0.04);z-index:60}
+    .header-inner{max-width:var(--maxw);margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0.9rem 1rem}
+    main{max-width:var(--maxw);margin:1.5rem auto;padding:0 1rem}
+    .story-hero{height:360px;border-radius:12px;overflow:hidden;background-size:cover;background-position:center;margin-bottom:1rem;border:1px solid rgba(255,255,255,0.03);box-shadow:0 12px 40px rgba(2,6,8,0.5)}
+    article.story{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));padding:1.2rem;border-radius:12px;border:1px solid rgba(255,255,255,0.03);line-height:1.75;color:#dfe9ea}
+    h1{font-family:'Cinzel', serif;margin:0 0 .6rem;color:var(--soft);letter-spacing:1px}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo-wrap" href="index.html"><span class="logo-symbol" id="logoSymStory"></span><span class="logo-text" style="font-family:'Cinzel', serif;font-weight:700">No Pablo</span></a>
+      <nav class="main-nav" role="navigation">
+        <ul style="display:flex;gap:1rem;list-style:none;margin:0;padding:0">
+          <li><a href="index.html">Start</a></li>
+          <li><a href="news.html">Neuigkeiten</a></li>
+          <li><a href="story.html" aria-current="page">Über uns</a></li>
+          <li><a href="spiele.html">Spiele</a></li>
+          <li><a href="shop.html">Shop</a></li>
+          <li><a href="kontakt.html">Kontakt</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="story-hero" aria-hidden="true" style="background-image:url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=1400&auto=format&fit=crop');"></div>
+
+    <h1>Unsere Geschichte</h1>
+
+    <article class="story" role="article" aria-labelledby="storyTitle">
+      <h2 id="storyTitle" style="font-family:'Cinzel', serif;margin-top:0">No Pablo — zwei junge Entwickler, große Geschichten</h2>
+
+      <p>Wir sind zwei junge Entwickler, die beschlossen haben, Narrative in den Mittelpunkt zu stellen. Unsere Spiele sind klein in der Grafik, groß in der Erinnerung: Entscheidungen, Texte und Atmosphären führen die Erzählung.</p>
+
+      <p>Unsere Inspiration kommt aus alten Geschichten, Volksliedern und stillen Momenten. Wir bauen Räume, in denen Spieler*innen auf Entdeckung gehen — ohne laute Effekte, aber mit Bedeutung.</p>
+
+      <p>Unten findest du einen kurzen Auszug einer erzählerischen Probe, die den Ton unserer Projekte zeigt:</p>
+
+      <p style="white-space:pre-wrap; color:var(--muted)">
+In alten Tagen, als die Welt noch jung war und die Menschen einfacher lebten...
+      </p>
+
+      <p>Wenn du an unserer Schreibarbeit mitarbeiten oder Feedback geben möchtest, kontaktiere uns gerne.</p>
+    </article>
+  </main>
+
+  <footer class="site-footer" style="margin-top:auto;padding:1rem;border-top:1px solid rgba(255,255,255,0.03)">
+    <div style="max-width:var(--maxw);margin:0 auto;padding:0 1rem;display:flex;justify-content:space-between;align-items:center;color:var(--muted)">
+      <div>© No Pablo — Über uns</div>
+      <div><a href="index.html" style="color:var(--muted);text-decoration:none">Start</a></div>
+    </div>
+  </footer>
+
+  <script>
+    (function(){
+      const el = document.getElementById('logoSymStory'); let t=0;
+      function anim(){ t+=0.016; el.style.transform = `scale(${1+0.03*Math.sin(t*1.6)}) rotate(${1.6*Math.sin(t*0.9)}deg)`; requestAnimationFrame(anim) }
+      requestAnimationFrame(anim);
+    })();
+  </script>
+</body>
+</html>
