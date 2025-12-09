@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Lane Runner - With Shop, Skins and Toasts</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="ui">
+    <div id="score">SCORE: 0</div>
+    <div id="speed">SPEED: 1.00x</div>
+    <div id="balance">BANK: 0</div>
+    <div id="lives">LIVES: 0</div>
+  </div>
+
+  <div id="topRightControls">
+    <button id="muteBtn" class="small-btn">🔊</button>
+    <input id="volumeSlider" type="range" min="0" max="1" step="0.01" value="0.8" />
+    <a href="shop.html" class="small-btn" id="shopLink">SHOP</a>
+  </div>
+
+  <div id="startScreen" class="overlay">
+    <h1>Lane Runner</h1>
+    <p>Move with WASD or tap the screen. Collect coins, avoid obstacles.</p>
+    <div class="controls-legend">
+      W: accelerate • S: slow down • A/D: left/right • Touch: tap left/right half
+    </div>
+    <div class="buttons-row">
+      <button id="startBtn" class="btn-primary">PLAY</button>
+      <button id="shopBtn" class="btn-secondary" onclick="location.href='shop.html'">SHOP</button>
+    </div>
+    <div id="preloader" class="hint">
+      Loading assets: <span id="loadProgress">0%</span>
+    </div>
+  </div>
+
+  <div id="gameOverScreen" class="overlay" style="display:none;">
+    <h2>GAME OVER</h2>
+    <p id="finalScore">FINAL SCORE: 0</p>
+    <div class="buttons-row">
+      <button id="saveRestartBtn" class="btn-primary">SAVE & RESTART</button>
+    </div>
+  </div>
+
+  <canvas id="gameCanvas"></canvas>
+
+  <!-- Mobile on-screen buttons -->
+  <div id="mobileControls">
+    <button id="leftBtn" class="touch-btn">◀</button>
+    <div class="vspace"></div>
+    <button id="rightBtn" class="touch-btn">▶</button>
+    <div id="accelBtn" class="touch-btn small">▲</div>
+    <div id="brakeBtn" class="touch-btn small">▼</div>
+  </div>
+
+  <!-- Toast container -->
+  <div id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
+  <script type="module" src="game.js"></script>
+</body>
+</html>

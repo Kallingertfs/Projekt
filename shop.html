@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Shop & Skins - Lane Runner</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="overlay" style="left:50%; top:8%; transform:translateX(-50%); width: 92%; max-width: 760px;">
+    <h2>Shop & Skins</h2>
+    <p>Use the BANK points to buy power-ups or car skins. You can also equip the skins you own.</p>
+    <div id="shopBalance" class="hint">BANK: 0</div>
+
+    <h3>Power-ups</h3>
+    <div class="shop-item">
+      <div class="shop-title">Extra Life</div>
+      <div class="shop-desc">Revive once after a collision.</div>
+      <div class="shop-cost">Cost: <strong>100</strong></div>
+      <button data-item="extraLife" class="buyBtn">BUY</button>
+    </div>
+
+    <div class="shop-item">
+      <div class="shop-title">Double Coins (1 run)</div>
+      <div class="shop-desc">Doubles collected coins for one run.</div>
+      <div class="shop-cost">Cost: <strong>150</strong></div>
+      <button data-item="doubleCoins" class="buyBtn">BUY</button>
+    </div>
+
+    <div class="shop-item">
+      <div class="shop-title">Magnet (1 run)</div>
+      <div class="shop-desc">Attracts coins for 10s.</div>
+      <div class="shop-cost">Cost: <strong>120</strong></div>
+      <button data-item="magnet" class="buyBtn">BUY</button>
+    </div>
+
+    <h3>Skins</h3>
+    <div id="skinsGrid" class="skins-grid">
+      <!-- populated by JS -->
+    </div>
+
+    <div style="margin-top:12px; display:flex; gap:10px; justify-content:center;">
+      <button id="backBtn" class="btn-primary">BACK TO GAME</button>
+      <button id="resetBtn" class="btn-secondary">RESET SAVE</button>
+    </div>
+  </div>
+
+<script>
+// shop logic using localStorage: lr_save contains { balance, best, inv, skinsOwned, selectedSkin }
+const shopBalanceEl = document.getElementById('shopBalance');
+const backBtn = document.getElementById('backBtn');
+const resetBtn = document.getElementById('resetBtn');
+const buyBtns = document.querySelectorAll('.buyBtn');
+const skinsGrid = document.getElementById('skinsGrid');
+
+const SKINS = [
+  { id: 'default', name: 'Classic Green', price: 0, color: '#00c48f', desc: 'Classic material.' },
+  { id: 'red', name: 'Red Fury', price: 200, color: '#ff4a4a', desc: 'Aggressive and fast.' },
+  { id: 'blue', name: 'Blue Lightning', price: 250, color: '#3ea8ff', desc: 'Cool and shiny.' },
+  { id: 'chrome', name: 'Chrome', price: 400, color: '#c7c7c7', desc: 'Shiny like metal.' }
+];
+
+function loadSave(){
+  const s = JSON.parse(localStorage.getItem('lr_save') || '{}');
+  s.balance = s.balance || 0;
+  s.inv = s.inv || { extraLife:0, doubleCoins:0, magnet:0 };
+  s.best = s.best || 0;
+  s.skinsOwned = s.skinsOwned || { default: 1 }; // default skin owned
+  s.selectedSkin = s.selectedSkin || 'default';
+  return s;
+}
+function saveSave(s){ localStorage.setItem('lr_save', JSON.stringify(s)); }
+
+function updateUI(){
+  const s = loadSave();
+  shopBalanceEl.textContent = 'BANK: ' + s.balance;
+  renderSkins();
+}
+updateUI();
+
+buyBtns.forEach(b=>{
+  b.addEventListener('click',()=>{
+    const item = b.dataset.item;
+    const cost = item === 'extraLife' ? 100 : (item === 'doubleCoins' ? 150 : 120);
+    const s = loadSave();
+    if(s.balance >= cost){
+      s.balance -= cost;
+      s.inv[item] = (s.inv[item]||0) + 1;
+      saveSave(s);
+      updateUI();
+      showToast('Purchased: ' + readable(item), 'success');
+    } else {
+      showToast('You do not have enough BANK points.', 'error');
+    }
+  })
+});
+
+function readable(item){
+  if(item === 'extraLife') return 'Extra Life';
+  if(item === 'doubleCoins') return 'Double Coins';
+  if(item === 'magnet') return 'Magnet';
+  return item;
+}
+
+/* SKIN UI */
+function renderSkins(){
+  const s = loadSave();
+  skinsGrid.innerHTML = '';
+  SKINS.forEach(sk=>{
+    const owned = !!s.skinsOwned[sk.id];
+    const selected = s.selectedSkin === sk.id;
+    const card = document.createElement('div');
+    card.className = 'skin-card';
+    card.innerHTML = `
+      <div class="skin-thumb" style="background:linear-gradient(180deg, ${sk.color}, #00000066);"></div>
+      <div class="skin-info">
+        <div class="skin-name">${sk.name}</div>
+        <div class="skin-desc">${sk.desc}</div>
+        <div class="skin-controls">
+          ${owned ? `<button class="equipBtn" data-skin="${sk.id}">${selected ? 'EQUIPPED' : 'EQUIP'}</button>` : `<div class="skin-cost">Cost: ${sk.price}</div><button class="buySkinBtn" data-skin="${sk.id}">BUY</button>`}
+        </div>
+      </div>
+    `;
+    skinsGrid.appendChild(card);
+  });
+
+  // attach listeners
+  document.querySelectorAll('.buySkinBtn').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const id = b.dataset.skin;
+      const skin = SKINS.find(x=>x.id===id);
+      const s = loadSave();
+      if(s.balance >= skin.price){
+        s.balance -= skin.price;
+        s.skinsOwned[skin.id] = 1;
+        saveSave(s);
+        updateUI();
+        showToast(`Skin purchased: ${skin.name}`, 'success');
+      } else {
+        showToast('You do not have enough points for this skin.', 'error');
+      }
+    });
+  });
+
+  document.querySelectorAll('.equipBtn').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const id = b.dataset.skin;
+      const s = loadSave();
+      s.selectedSkin = id;
+      saveSave(s);
+      updateUI();
+      showToast('Skin equipped', 'info');
+    });
+  });
+}
+
+backBtn.addEventListener('click', ()=>{ window.location.href = 'game.html'; });
+resetBtn.addEventListener('click', ()=>{
+  if(confirm('Reset all saved data?')){ 
+    localStorage.removeItem('lr_save'); 
+    updateUI(); 
+    showToast('Save data reset', 'info'); 
+  }
+});
+
+/* small toast helper (same look as in game) */
+function showToast(msg, type='info'){
+  const container = document.createElement('div');
+  container.className = `toast toast-${type}`;
+  container.textContent = msg;
+  document.body.appendChild(container);
+  requestAnimationFrame(()=> container.classList.add('visible'));
+  setTimeout(()=> { container.classList.remove('visible'); setTimeout(()=>container.remove(),400); }, 3000);
+}
+</script>
+</body>
+</html>
